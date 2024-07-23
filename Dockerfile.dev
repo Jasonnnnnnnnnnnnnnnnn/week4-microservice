@@ -1,9 +1,34 @@
+# FROM node:16
+
+# WORKDIR /app
+
+# COPY package*.json ./
+
+# RUN npm install
+
+# CMD ["npm","run","start:dev"]
+
 FROM node:16
 
+# Set working directory
 WORKDIR /app
 
+# Copy package.json and package-lock.json
 COPY package*.json ./
 
+# Set npm configurations to handle network issues
+RUN npm config set fetch-retries 5 \
+    && npm config set fetch-retry-mintimeout 20000 \
+    && npm config set fetch-retry-maxtimeout 120000
+
+# Install dependencies
 RUN npm install
 
-CMD ["npm","run","start;dev"]
+# Copy the rest of the application code
+COPY . .
+
+# Expose the application port
+EXPOSE 3000
+
+# Start the application
+CMD ["npm", "run", "start:dev"]
