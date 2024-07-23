@@ -3,11 +3,17 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { MongooseModule } from '@nestjs/mongoose';
 import { CatsModule } from './cats/cats.module';
+import { ConfigModule } from '@nestjs/config';
 
 @Module({
+  
   imports: [
+    ConfigModule.forRoot({
+      envFilePath: ['.env.local'],
+      isGlobal: true,
+    }),
     MongooseModule.forRoot(
-      'mongodb://root:rootpassword@localhost:27017/mydb?authSource=admin',
+      process.env.MONGODB_URI
     ),
     CatsModule,
   ],
